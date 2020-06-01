@@ -521,6 +521,11 @@
 	      :ensure t
 	      :config (flycheck-package-setup))))
 
+;;; * Load Org init file
+;; we want the newest org mode with the contributed packages
+(use-package org :ensure org-plus-contrib)
+(load-file "~/.emacs.d/org-init.el")
+
 ;;; * Internet related
 ;;; ** auth - keeping secrets in a gpg encrypted file
 (setq auth-sources '((:source "~/.authinfo.gpg")))
@@ -657,7 +662,7 @@ new frame if current buffer is not already a man buffer."
 	 ("<f12> A" . magit-blame)
 	 ("<f12> f" . magit-log-buffer-file)))
 
-(use-package forge
+(use-package forge :ensure t
   :after magit
   :config (progn
 	    (push '("git.psi.ch" "git.psi.ch/api/v4" "git.psi.ch"
@@ -696,7 +701,7 @@ new frame if current buffer is not already a man buffer."
 ;; links for org mode
 ;; to get correctly exported links pointing to the respective repo web pages
 ;; look at orgit-export-alist
-(use-package orgit
+(use-package orgit :ensure t
   :after org)
 
 ;;; ** searching and navigation
