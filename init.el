@@ -353,22 +353,12 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; * Text editing
 ;;; ** misc text editing packages
-(use-package expand-region :ensure t :bind ("C-ä" . er/expand-region))
+(use-package expand-region :ensure t :bind ("C-=" . er/expand-region))
 (use-package shrink-whitespace :ensure t :bind ("M-SPC" . shrink-whitespace))
 (use-package string-edit :ensure t)
 
 (use-package iedit
   :ensure t
-  :config (progn
-	    ;; iedit mode key adaptions
-	    ;; postponed loading could also be done using eval-after-load
-	    (defun dfeich/iedit-keydefs ()
-	      (define-key iedit-mode-keymap (kbd "M-ä")
-		'iedit-expand-up-a-line)
-	      (define-key iedit-mode-keymap (kbd "M-$")
-		'iedit-expand-down-a-line)
-	      )
-	    (add-hook 'iedit-mode-hook 'dfeich/iedit-keydefs))
   ;; iedit-rectangle default C-RET is taken in org mode
   :bind (("C-;" . iedit-mode)
 	 ("C-:" . iedit-rectangle-mode))
