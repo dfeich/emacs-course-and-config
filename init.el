@@ -157,7 +157,7 @@
 ;;; * Helper functions and macros supporting configuration
 ;; function by xuchunyang to remove all advising from a function
 ;; https://emacs.stackexchange.com/questions/24657/unadvise-a-function-remove-all-advice-from-it
-(defun dfeich/advice-unadvice (sym)
+(defun dfeich-advice-unadvice (sym)
   "Remove all advices from symbol SYM."
   (interactive "aFunction symbol: ")
   (advice-mapc (lambda (advice _props) (advice-remove sym advice)) sym))
@@ -290,7 +290,7 @@
   :demand t
   :config (progn
 	    ;; extend helm for org headings with the clock-in action
-	    (defun dfeich/helm-org-clock-in (marker)
+	    (defun dfeich-helm-org-clock-in (marker)
 	      "Clock in and out of the item at MARKER"
 	      (with-current-buffer (marker-buffer marker)
 		(goto-char (marker-position marker))
@@ -301,16 +301,8 @@
 	    (eval-after-load 'helm-org
 	      '(nconc helm-org-headings-actions
 		      (list
-		       (cons "Clock into task" #'dfeich/helm-org-clock-in))))
-	    (defun dfeich/helm-org-agenda-files-headings ()
-	      "helm-org-agenda-files-headings with filtering out of some files."
-	      (interactive)
-	      (let ((org-agenda-files (seq-remove
-				       (lambda (x) (string= x  "~/polybox/agenda/tasks.org"))
-				       org-agenda-files)))
-		(helm-org-agenda-files-headings)))
-	    )
-  :bind (( "<f5> <f5>" . dfeich/helm-org-agenda-files-headings)
+		       (cons "Clock into task" #'dfeich-helm-org-clock-in)))))
+  :bind (( "<f5> <f5>" . helm-org-agenda-files-headings)
 	 ( "<f5> <f6>" . helm-bookmarks)
 	 ( "<f5> a" . helm-apropos)
 	 ( "<f5> A" . helm-apt)
@@ -325,7 +317,7 @@
 	 ( "<f5> K" . helm-execute-kmacro)
 	 ( "<f5> l" . helm-locate)
 	 ;; ( "<f5> m" . helm-man-woman)
-	 ( "<f5> m" . dfeich/show-manpage)
+	 ( "<f5> m" . dfeich-show-manpage)
 	 ( "<f5> o" . helm-occur)
 	 ( "<f5> r" . helm-resume)
 	 ( "<f5> R" . helm-register)
@@ -335,9 +327,9 @@
 	 ( "<f5> x" . helm-M-x))
   )
 
-(defmacro dfeich/helm-add-action-to-sourcefn (srcfn name func)
+(defmacro dfeich-helm-add-action-to-sourcefn (srcfn name func)
   "Adds an action to a helm source-producing function through advice."
-  (let ((advfn (make-symbol (concat "dfeich/" (symbol-name srcfn)))))
+  (let ((advfn (make-symbol (concat "dfeich-" (symbol-name srcfn)))))
     ;; The default selection is given in the first arg
     `(progn (defun ,advfn (origfn &rest args)
 	      ;; (message (pp-to-string args))
@@ -411,14 +403,14 @@
 ;; customize whitespace mode
 ;; refer to https://dougie.io/coding/tabs-in-emacs/
 
-(defun dfeich/whitespace-prog-config ()
+(defun dfeich-whitespace-prog-config ()
   (setq-local whitespace-style '(face trailing empty))
   (whitespace-mode))
 
-(add-hook 'emacs-lisp-mode-hook 'dfeich/whitespace-prog-config)
-(add-hook 'python-mode-hook 'dfeich/whitespace-prog-config)
-(add-hook 'yaml-mode-hook 'dfeich/whitespace-prog-config)
-(add-hook 'puppet-mode-hook 'dfeich/whitespace-prog-config)
+(add-hook 'emacs-lisp-mode-hook 'dfeich-whitespace-prog-config)
+(add-hook 'python-mode-hook 'dfeich-whitespace-prog-config)
+(add-hook 'yaml-mode-hook 'dfeich-whitespace-prog-config)
+(add-hook 'puppet-mode-hook 'dfeich-whitespace-prog-config)
 
 ;; aggressive indent mode - https://github.com/Malabarba/aggressive-indent-mode
 (use-package aggressive-indent
@@ -467,17 +459,17 @@
 	    ;; do not pair single quote in org mode
 	    (sp-local-pair 'org-mode "'" nil :actions nil)
 
-	    (defun dfeich/disable-smartparens-mode ()
+	    (defun dfeich-disable-smartparens-mode ()
 	      (smartparens-mode -1)
 	      ;; since we still want to have matching parens highlighting, I set
 	      (show-paren-mode))
 	    ;; terminal emulation modes (e.g. ansi term) do not work well with
 	    ;; yasnippet and autopair modes (term character mode returns errors)
-	    (add-hook 'term-mode-hook 'dfeich/disable-smartparens-mode)
+	    (add-hook 'term-mode-hook 'dfeich-disable-smartparens-mode)
 	    ;; in lisp mode I prefer paredit
-	    (add-hook 'emacs-lisp-mode-hook 'dfeich/disable-smartparens-mode)
+	    (add-hook 'emacs-lisp-mode-hook 'dfeich-disable-smartparens-mode)
 	    ;; web-mode has it's own parens matching
-	    (add-hook 'web-mode-hook 'dfeich/disable-smartparens-mode)))
+	    (add-hook 'web-mode-hook 'dfeich-disable-smartparens-mode)))
 
 
 ;; rainbow-delimiters
@@ -535,7 +527,7 @@
 ;; (auth-source-forget-all-cached)
 
 ;; adapted from https://github.com/jorgenschaefer/circe/wiki/Configuration
-(defun dfeich/get-password-from-auth-source (&rest params)
+(defun dfeich-get-password-from-auth-source (&rest params)
   "Retrieve password from an auth-source.
 `PARAMS' should be a number of :key value pairs use the standardized keywords
 like :host, :user, :port"
@@ -591,7 +583,7 @@ string for a search in eww."
 ;;; ** Man page mode (woman)
 ;; showing of man pages (woman)
 ;; (setq Man-notify-method 'newframe)
-(defun dfeich/show-manpage (prefix)
+(defun dfeich-show-manpage (prefix)
   "Adapt the frame opening behavior helm-man-woman.  Open in a
 new frame if current buffer is not already a man buffer."
   (interactive "P")
@@ -601,7 +593,7 @@ new frame if current buffer is not already a man buffer."
 	   'newframe)))
     (funcall-interactively #'helm-man-woman prefix)))
 
-(defun dfeich/Man-notify-when-ready (orig-fun &rest args)
+(defun dfeich-Man-notify-when-ready (orig-fun &rest args)
   "If current window has man major mode, use other Man-notify-method."
   (let ((Man-notify-method
 	 (if (eq major-mode 'Man-mode)
@@ -609,7 +601,7 @@ new frame if current buffer is not already a man buffer."
 	   'newframe)))
     (message "major-mode: %s   buffer: %s" major-mode (buffer-name))
     (apply orig-fun args)))
-(advice-add 'Man-getpage-in-background :around #'dfeich/Man-notify-when-ready)
+(advice-add 'Man-getpage-in-background :around #'dfeich-Man-notify-when-ready)
 
 ;;; * Some minor mode configurations
 ;;; ** Folding
@@ -659,7 +651,7 @@ new frame if current buffer is not already a man buffer."
 (use-package magit
   :ensure t
   :bind (("<f12> <f12>" . magit-status)
-	 ("<f12> A" . magit-blame)
+	 ("<f12> b" . magit-blame)
 	 ("<f12> f" . magit-log-buffer-file)))
 
 (use-package forge :ensure t
@@ -668,7 +660,9 @@ new frame if current buffer is not already a man buffer."
 	    (push '("git.psi.ch" "git.psi.ch/api/v4" "git.psi.ch"
 		    forge-gitlab-repository)
 		  forge-alist)
-	    (setq forge-owned-accounts '(("dfeich")))))
+	    ;; TODO: put your github account here:
+	    ;; (setq forge-owned-accounts '(("dfeich")))
+	    ))
 
 ;; alphapapa's magit-todos
 ;;   SEEMS TO CURRENTLY NOT WORK. I ALSO DISABLE DUE TO WAIT TIMES OVER sshfs
@@ -800,7 +794,7 @@ new frame if current buffer is not already a man buffer."
 	    ;; show line numbers on the left for python using the new (26.1) mode
 	    (display-line-numbers-mode)
 	    ;; load my own python helper functions
-	    (load-file (concat dfeich/site-lisp "/my-pydoc-helper.el"))
+	    (load-file (concat dfeich-site-lisp "/my-pydoc-helper.el"))
 
 	    (when (featurep 'flycheck)
 	      (add-hook 'python-mode-hook 'flycheck-mode))
@@ -834,11 +828,11 @@ new frame if current buffer is not already a man buffer."
 
 ;; TODO: find correct way of having M-q put two spaces at sentence
 ;; ends for following emacs lisp convention
-;; (defun dfeich/emacs-lisp-mode-settings ()
+;; (defun dfeich-emacs-lisp-mode-settings ()
 ;;   (set (make-local-variable 'colon-double-space) t)
 ;;   (set (make-local-variable 'sentence-end-double-space) t))
 
-;; (add-hook 'emacs-lisp-mode-hook 'dfeich/emacs-lisp-mode-settings)
+;; (add-hook 'emacs-lisp-mode-hook 'dfeich-emacs-lisp-mode-settings)
 
 ;; Paredit mode for writing lisp
 ;; very nice tutorial: http://danmidwood.com/content/2014/11/21/animated-paredit.html
@@ -847,12 +841,12 @@ new frame if current buffer is not already a man buffer."
   :config (progn (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
 		 (add-hook 'lisp-interaction-mode-hook 'paredit-mode)
 		 ;; in scratch buffer I would like to have the C-j result echoing
-		 (defun dfeich/paredit-eval-or-newline ()
+		 (defun dfeich-paredit-eval-or-newline ()
 		   (interactive)
 		   (if (eq major-mode 'lisp-interaction-mode)
 		       (eval-print-last-sexp)
 		     (paredit-newline)))
-		 (bind-key "C-j" #'dfeich/paredit-eval-or-newline
+		 (bind-key "C-j" #'dfeich-paredit-eval-or-newline
 			   paredit-mode-map))
   )
 
@@ -870,24 +864,24 @@ new frame if current buffer is not already a man buffer."
 	    (progn
 	      ;; note: there seems to be a general problem with
 	      ;; helpful-command. It has some keymap error
-	      (dfeich/helm-add-action-to-sourcefn helm-def-source--emacs-commands
+	      (dfeich-helm-add-action-to-sourcefn helm-def-source--emacs-commands
 						  "helpful-command"
 						  (lambda (sel)
 						    (funcall-interactively 'helpful-command (intern sel))))
 
-	      (dfeich/helm-add-action-to-sourcefn helm-def-source--emacs-functions
+	      (dfeich-helm-add-action-to-sourcefn helm-def-source--emacs-functions
 						  "helpful-function"
 						  (lambda (sel)
 						    (funcall-interactively 'helpful-function (intern sel))))
 
-	      (dfeich/helm-add-action-to-sourcefn helm-def-source--emacs-variables
+	      (dfeich-helm-add-action-to-sourcefn helm-def-source--emacs-variables
 						  "helpful-variable"
 						  (lambda (sel)
 						    (funcall-interactively 'helpful-variable (intern sel)))))))
 ;; I put here some comments to undefine the advices from above
-;; (dfeich/advice-unadvice 'helm-def-source--emacs-commands)
-;; (dfeich/advice-unadvice 'helm-def-source--emacs-functions)
-;; (dfeich/advice-unadvice 'helm-def-source--emacs-variables)
+;; (dfeich-advice-unadvice 'helm-def-source--emacs-commands)
+;; (dfeich-advice-unadvice 'helm-def-source--emacs-functions)
+;; (dfeich-advice-unadvice 'helm-def-source--emacs-variables)
 
 ;; eldoc-eval provides function help when using eval-expression (M-:)
 (use-package eldoc-eval :ensure t
@@ -920,7 +914,7 @@ new frame if current buffer is not already a man buffer."
 ;;; * KEY MAPPINGS AND HYDRAS
 ;;; ** Hydras
 ;;; *** context launcher for hydras
-(defun dfeich/context-hydra-launcher ()
+(defun dfeich-context-hydra-launcher ()
   "A launcher for hydras based on the current context."
   (interactive)
   (cl-case major-mode
@@ -939,7 +933,7 @@ new frame if current buffer is not already a man buffer."
     ('dired-mode (dired-helper/body))
     (t (message "No hydra for this major mode: %s" major-mode))))
 
-(global-set-key (kbd "<f9> <f9>") 'dfeich/context-hydra-launcher)
+(global-set-key (kbd "<f9> <f9>") 'dfeich-context-hydra-launcher)
 
 ;;; *** org mode hydras
 (defhydra hydra-org-default (:color pink :hint nil)
@@ -951,7 +945,7 @@ _r_ insert src block ref with helm
 
 _q_ quit
 "
-  ("l" dfeich/copy-last-src-block-head :color blue)
+  ("l" dfeich-copy-last-src-block-head :color blue)
   ("r" helm-lib-babel-insert :color blue)
   ("q" nil :color blue))
 
@@ -971,7 +965,7 @@ _q_ quit
   ("k" org-link-edit-forward-barf)
   ("n" org-next-link)
   ("p" org-previous-link)
-  ("t" dfeich/gnome-terminal-at-link :color blue)
+  ("t" dfeich-gnome-terminal-at-link :color blue)
   ("q" nil :color blue))
 
 (defhydra hydra-org-table-helper (:color pink :hint nil)
@@ -994,7 +988,7 @@ _q_ quit
   ("w" org-table-wrap-region)
   ("D" org-table-toggle-formula-debugger)
   ("t" org-table-transpose-table-at-point)
-  ("n" dfeich/org-table-remove-num-sep :color blue)
+  ("n" dfeich-org-table-remove-num-sep :color blue)
   ("c" org-table-toggle-coordinate-overlays :color blue)
   ("q" nil :color blue))
 
@@ -1077,8 +1071,8 @@ sizing:  _j_ ^ ^ _k_    moving: _g_ ^ ^ _h_    sizing:  _a_ ^ ^ _s_
   ("h" shift-frame-right)
   ("z" shift-frame-up)
   ("b" shift-frame-down)
-  ("t" dfeich/toggle-window-split "toggle windows splitting")
-  ("n" dfeich/open-buffer-in-new-frame "open buffer in new frame" :color blue)
+  ("t" dfeich-toggle-window-split "toggle windows splitting")
+  ("n" dfeich-open-buffer-in-new-frame "open buffer in new frame" :color blue)
   ("q" nil "quit" :color blue))
 
 (global-set-key (kbd "C-c w") 'hydra-window-mngm/body)
@@ -1257,7 +1251,7 @@ narrowed."
 
 (global-set-key (kbd "<f6> f") 'make-frame)
 (global-set-key (kbd "<f6> G") 'helm-google-suggest)
-(global-set-key (kbd "<f6> i") 'dfeich/helm-info-localmode)
+(global-set-key (kbd "<f6> i") 'dfeich-helm-info-localmode)
 (global-set-key (kbd "<f6> I") 'helm-info)
 (global-set-key (kbd "<f6> l") 'helm-info-elisp)
 (global-set-key (kbd "<f6> p") 'proced)
