@@ -27,9 +27,9 @@
 ;;; * org agenda
 ;;; ** basic configuration
 ;; default directory to look for org files
-(setq org-directory "~/org-agenda/")
-(setq org-agenda-files (list (concat org-directory "tasks2020.org")
-			     (concat org-directory "private.org")))
+(setq org-directory "~/Documents/orgcourse/agenda/")
+(setq org-agenda-files (list (concat org-directory "course01-basics.org")
+			     (concat org-directory "tasks.org")))
 
 ;; 'q' key should only bury agenda buffer, not delete it
 (setq org-agenda-sticky t)
@@ -139,10 +139,8 @@
 			  (:name "Captured - to be moved"
 				 :tag "captured")
 			  (:auto-group t)
-			  (:name "Projects"
-				 :tag "project")
-			  (:name "Services"
-				 :tag "service")))))
+			  (:name "Emacs Course"
+				 :tag "emacs_course")))))
 
 
 ;;; * Org capture templates
@@ -350,6 +348,31 @@
 ;; additional indentation of the code in the source block relative to
 ;; the block's BEGIN/END
 (setq org-edit-src-content-indentation 2)
+
+;;; * Org keymap additions
+
+;; In emacs 24.4 the `newline' command was changed, so that it no
+;; longer indents when called non-interactively. In org, the return
+;; key is mapped in a way that newline is called only through
+;; org-return. This key setting fixes indentation by explicitely
+;; calling org-return with an argument to enforce indentation.
+(defun my-fix-org-return ()
+  (interactive)
+  (org-return t))
+
+(defun my-org-hook-additions ()
+  (define-key org-mode-map (kbd "<return>") 'my-fix-org-return))
+(add-hook 'org-mode-hook 'my-org-hook-additions)
+
+;;; * Org add ons
+;; helm integration for org agenda
+(use-package helm-org
+  :ensure t
+  :config
+  (setq helm-org-format-outline-path t   ;; use item's whole outline path for candidates
+	helm-org-show-filename nil ;; show agenda file's name in candidates
+	helm-org-headings-max-depth 5 ;; maximum depth of a heading to be taken as a candidate
+	))
 
 ;;; * Footer
 ;; Local Variables:

@@ -3,7 +3,7 @@
 ;;
 ;; For getting help on keybindings, there is the standard command
 ;; for listing the current mode mappings: C-h m
-;; but also helm-describe: <f5>-D
+;; but also helm-descbinds: <f5>-d
 ;; and discover-my-major: C-h j
 ;; use-package introduces describe-personal-keybindings. Also, there is
 ;;    use-package-enable-imenu-support which adds use-package locations
@@ -664,17 +664,6 @@ new frame if current buffer is not already a man buffer."
 	    ;; (setq forge-owned-accounts '(("dfeich")))
 	    ))
 
-;; alphapapa's magit-todos
-;;   SEEMS TO CURRENTLY NOT WORK. I ALSO DISABLE DUE TO WAIT TIMES OVER sshfs
-;; (use-package magit-todos
-;;   :config (progn
-;; 	    (customize-set-variable 'magit-todos-keywords
-;; 				    '("TODO:" "* TODO" "FIXME:" "- [ ]")
-;; 				    "Set by use-package in init.el")
-;; 	    (setq magit-todos-require-colon nil
-;; 		  magit-todos-scanner 'magit-todos--scan-with-rg)
-;; 	    (magit-todos-mode)))
-
 (use-package git-timemachine
   :ensure t
   :config (set-face-attribute 'git-timemachine-minibuffer-detail-face nil
@@ -1247,7 +1236,7 @@ narrowed."
 (use-package discover-my-major :bind ("\C-hj" . discover-my-major))
 (use-package helm-descbinds
   :ensure t
-  :bind ( "<f5> D" . helm-descbinds))
+  :bind ( "<f5> d" . helm-descbinds))
 
 (global-set-key (kbd "<f6> f") 'make-frame)
 (global-set-key (kbd "<f6> G") 'helm-google-suggest)
