@@ -375,6 +375,18 @@
 	helm-org-headings-max-depth 5 ;; maximum depth of a heading to be taken as a candidate
 	))
 
+;; my own package for screenshot integration
+;; depending on your OS and screenshot utility, you may need to adapt
+;; the screenshot command.
+(use-package org-attach-screenshot
+  :ensure t
+  :bind ("<f6> s" . org-attach-screenshot)
+  :config (setq org-attach-screenshot-dirfunction
+		(lambda () 
+		  (progn (assert (buffer-file-name))
+			 (concat (file-name-sans-extension (buffer-file-name))
+				 "-att")))
+		org-attach-screenshot-command-line "gnome-screenshot -a -f %f"))
 ;;; * Footer
 ;; Local Variables:
 ;; eval: (outline-minor-mode)
