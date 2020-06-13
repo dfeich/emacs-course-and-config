@@ -182,6 +182,8 @@
 ;;; * linking to external applications
 
 ;; Thunderbird mail - open thunderlinks in thunderbird
+;; You need to get the thunderlink extension to use that
+;; https://addons.thunderbird.net/en-US/thunderbird/addon/thunderlink/
 (defun org-thunderlink-open (path)
   "open thunderlink"
   (shell-command

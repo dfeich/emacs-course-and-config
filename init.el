@@ -301,31 +301,60 @@
 	    (eval-after-load 'helm-org
 	      '(nconc helm-org-headings-actions
 		      (list
-		       (cons "Clock into task" #'dfeich-helm-org-clock-in)))))
-  :bind (( "<f5> <f5>" . helm-org-agenda-files-headings)
-	 ( "<f5> <f6>" . helm-bookmarks)
-	 ( "<f5> a" . helm-apropos)
-	 ( "<f5> A" . helm-apt)
-	 ( "<f5> b" . helm-buffers-list)
-	 ( "<f5> B" . helm-bibtex)
-	 ( "<f5> c" . helm-colors)
-	 ( "<f5> f" . helm-find-files)
-	 ( "<f5> g" . helm-org-rifle)
-	 ( "<f5> G" . helm-org-rifle-directories)
-	 ( "<f5> i" . helm-semantic-or-imenu)
-	 ( "<f5> k" . helm-show-kill-ring)
-	 ( "<f5> K" . helm-execute-kmacro)
-	 ( "<f5> l" . helm-locate)
+		       (cons "Clock into task" #'dfeich-helm-org-clock-in))))
+
+	    (defun dfeich-helm-info-localmode ()
+	      "Define which helm index info to use based on the current mode."
+	      (interactive)
+	      (require 'helm-info)
+	      (case major-mode
+		('org-mode (helm-info-org))
+		('emacs-lisp-mode (helm-info-elisp))
+		('magit-status-mode (helm-info-magit))
+		('mu4e-headers-mode (info "mu4e"))
+		('mu4e-view-mode (info "mu4e"))
+		('makefile-gmake-mode (helm-info-make))
+		('Info-mode
+		 (let*
+		     ((nodename (file-name-sans-extension
+				 (file-name-nondirectory Info-current-file)))
+		      (helmcmd (intern-soft (concat "helm-info-" nodename))))
+		   (cond
+		    ((equal nodename "dir") (helm-info))
+		    (helmcmd (funcall-interactively helmcmd))
+		    (t (message "No helm command helm-info-%s" nodename)))))
+		(t (progn (message  "No helm info pre-configured for this mode (%s)"
+				    major-mode)
+			  (helm-info))))))
+  
+  :bind (("<f5> <f5>" . helm-org-agenda-files-headings)
+	 ("<f5> <f6>" . helm-bookmarks)
+	 ("<f5> a" . helm-apropos)
+	 ("<f5> A" . helm-apt)
+	 ("<f5> b" . helm-buffers-list)
+	 ("<f5> B" . helm-bibtex)
+	 ("<f5> c" . helm-colors)
+	 ("<f5> f" . helm-find-files)
+	 ("<f5> g" . helm-org-rifle)
+	 ("<f5> G" . helm-org-rifle-directories)
+	 ("<f5> i" . helm-semantic-or-imenu)
+	 ("<f5> k" . helm-show-kill-ring)
+	 ("<f5> K" . helm-execute-kmacro)
+	 ("<f5> l" . helm-locate)
 	 ;; ( "<f5> m" . helm-man-woman)
-	 ( "<f5> m" . dfeich-show-manpage)
-	 ( "<f5> o" . helm-occur)
-	 ( "<f5> r" . helm-resume)
-	 ( "<f5> R" . helm-register)
-	 ( "<f5> t" . helm-top)
-	 ( "<f5> u" . helm-ucs)
-	 ( "<f5> p" . helm-list-emacs-process)
-	 ( "<f5> x" . helm-M-x))
-  )
+	 ("<f5> m" . dfeich-show-manpage)
+	 ("<f5> o" . helm-occur)
+	 ("<f5> p" . helm-list-emacs-process)
+	 ("<f5> r" . helm-resume)
+	 ("<f5> R" . helm-register)
+	 ("<f5> t" . helm-top)
+	 ("<f5> u" . helm-ucs)
+	 ("<f5> x" . helm-M-x)
+	 ;; <f6> based bindings
+	 ("<f6> G" .  helm-google-suggest)
+	 ("<f6> i" .  dfeich-helm-info-localmode)
+	 ("<f6> I" .  helm-info)
+	 ("<f6> l" .  helm-info-elisp)))
 
 (defmacro dfeich-helm-add-action-to-sourcefn (srcfn name func)
   "Adds an action to a helm source-producing function through advice."
@@ -1225,10 +1254,10 @@ narrowed."
 
 ;;
 
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
-(global-set-key "\C-cc" 'org-capture)
-(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-c a" 'org-agenda)
+(global-set-key "\C-c b" 'org-iswitchb)
+(global-set-key "\C-c c" 'org-capture)
+(global-set-key "\C-c l" 'org-store-link)
 ;; TODO: find-file-other-frame
 ;;(global-set-key "\C-co" ')
 
@@ -1239,10 +1268,6 @@ narrowed."
   :bind ( "<f5> d" . helm-descbinds))
 
 (global-set-key (kbd "<f6> f") 'make-frame)
-(global-set-key (kbd "<f6> G") 'helm-google-suggest)
-(global-set-key (kbd "<f6> i") 'dfeich-helm-info-localmode)
-(global-set-key (kbd "<f6> I") 'helm-info)
-(global-set-key (kbd "<f6> l") 'helm-info-elisp)
 (global-set-key (kbd "<f6> p") 'proced)
 (global-set-key (kbd "<f6> <f6> k") 'save-buffers-kill-emacs)
 
