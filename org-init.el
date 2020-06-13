@@ -146,26 +146,25 @@
 ;;; * Org capture templates
 ;; q.v. the org manual: Capture templates and template expansion
 ;; region selected text will be inserted at %i
-(setq dfeich/deftdir "~/polybox/deft/")
-(setq dfeich/capture-task-loc
-      (list 'file+headline (concat org-directory "tasks2020.org")
+(setq my-capture-task-loc
+      (list 'file+headline (concat org-directory "tasks.org")
 	    "Captured Tasks"))
 (setq org-capture-templates
-      `(("m" "Mail capture" entry ,dfeich/capture-task-loc
+      `(("m" "Mail capture" entry ,my-capture-task-loc
 	 ,(concat "* TODO %?Mail by %:fromname: %:subject\n"
 		  "SCHEDULED: %t\n"
 		  "  :LOGBOOK:\n"
 		  "  - State \"TODO\"       from \"\"           %U\n"
 		  "  :END:\n"
 		  "  - %:date Mail from %:fromname %a"))
-	("M" "Milestone" entry ,dfeich/capture-task-loc
+	("M" "Milestone" entry ,my-capture-task-loc
 	 ,(concat "* MSTONE %?\n"
 		  "  :LOGBOOK:\n"
 		  "  - State \"MSTONE\"       from \"\"           %U\n"
 		  "  :END:\n"
 		  "  - defined in %a\n"
 		  ))
-	("t" "todo" entry ,dfeich/capture-task-loc
+	("t" "todo" entry ,my-capture-task-loc
 	 ,(concat "* TODO %?\n"
 		  "SCHEDULED: %t\n"
 		  "  :LOGBOOK:\n"
