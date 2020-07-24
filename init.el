@@ -1242,24 +1242,16 @@ narrowed."
 ;;; ** GLOBAL KEY MAPPINGS
 ;; These intentionally are kept at the end
 
-;; useful on my laptop
-(global-set-key (kbd "<S-next>") (lambda () (interactive) (other-frame 1)))
-(global-set-key (kbd "<S-prior>") (lambda () (interactive) (other-frame -1)))
-(global-set-key (kbd "<C-next>") 'next-buffer)
-(global-set-key (kbd "<C-prior>") 'previous-buffer)
+;; easy moving to other windows in the same frame
 (global-set-key (kbd "C-c <left>") 'windmove-left)
 (global-set-key (kbd "C-c <right>") 'windmove-right)
 (global-set-key (kbd "C-c <up>") 'windmove-up)
 (global-set-key (kbd "C-c <down>") 'windmove-down)
 
-;;
-
-(global-set-key "\C-c a" 'org-agenda)
-(global-set-key "\C-c b" 'org-iswitchb)
-(global-set-key "\C-c c" 'org-capture)
-(global-set-key "\C-c l" 'org-store-link)
-;; TODO: find-file-other-frame
-;;(global-set-key "\C-co" ')
+;; The most important org mode commands that need to be available globally
+(global-set-key (kbd "C-c a") 'org-agenda)
+(global-set-key (kbd "C-c c") 'org-capture)
+(global-set-key (kbd "C-c l") 'org-store-link)
 
 
 (use-package discover-my-major :bind ("\C-hj" . discover-my-major))
@@ -1274,7 +1266,7 @@ narrowed."
 
 (global-set-key (kbd "<f12> a") 'vc-annotate)
 
-(global-set-key "\C-x\C-b" 'ibuffer-list-buffers)
+(global-set-key (kbd "C-x C-b") 'ibuffer-list-buffers)
 (global-set-key (kbd "M-c") 'calc-dispatch)
 ;; why am I getting problems with max-lisp-eval-depth here:
 ;;(global-set-key (kbd "C-$") 'yas-expand)
@@ -1285,9 +1277,6 @@ narrowed."
 
 (global-set-key (kbd "C-c O") 'eww-open-url-at-point)
 
-
-;; for lenovo T440s
-;;(global-set-key (kbd "<S-next>") 'next-frame)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; * Footer
